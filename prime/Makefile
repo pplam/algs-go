@@ -1,3 +1,3 @@
 build:
-	@go build -o p prime.go
+	@go build -o build/prime prime.go
 .PHONY: build
