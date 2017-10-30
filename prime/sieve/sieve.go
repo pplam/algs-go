@@ -1,31 +1,33 @@
-package filter
+package sieve
 
 import (
 	"sort"
 )
 
-func Filter(stop int) []int {
-	if stop < 2 {
+func Sieve(upper int) []int {
+	if upper < 2 {
 		return []int{}
 	}
 
 	result := []int{2}
 
-	l := 2
-	r := 2 * 2
-	for stop > l {
-		if stop < r {
-			r = stop
+	low := 2
+	high := 2 * 2
+	for upper > low {
+		if upper < high {
+			high = upper
 		}
 
 		ch := make(chan int)
-		for x := l + 1; x <= r; x++ {
+		defer close(ch)
+
+		for x := low + 1; x <= high; x++ {
 			go test(x, result, ch)
 		}
 
 		primes := []int{}
 		counter := 0
-		total := r - l
+		total := high - low
 		for {
 			if counter == total {
 				break
@@ -41,8 +43,8 @@ func Filter(stop int) []int {
 		sort.Ints(primes)
 		result = append(result, primes...)
 
-		l = r
-		r = l * l
+		low = high
+		high = low * low
 	}
 
 	return result
